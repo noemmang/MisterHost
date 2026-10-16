@@ -1,0 +1,8 @@
+# Sistema y editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Notas internas de trabajo
+/docs/
