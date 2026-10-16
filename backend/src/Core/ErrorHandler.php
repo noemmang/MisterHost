@@ -9,10 +9,7 @@ use Throwable;
 // Convierte cualquier error en una respuesta JSON.
 class ErrorHandler
 {
-    public function __construct(
-        private Translator $translator,
-        private JsonResponse $response
-    ) {
+    public function __construct( private Translator $translator, private JsonResponse $response) {
     }
 
     // Los errores esperados (HttpException) se devuelven tal cual.
