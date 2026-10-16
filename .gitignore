@@ -4,5 +4,9 @@ Thumbs.db
 .idea/
 .vscode/
 
+# Dependencias y configuración local
+vendor/
+.env
+
 # Notas internas de trabajo
 /docs/
