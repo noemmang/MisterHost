@@ -2,11 +2,15 @@
 
 declare(strict_types=1);
 
+use App\Controller\ReservaApiController;
+use App\Core\Database;
 use App\Core\ErrorHandler;
 use App\Core\JsonResponse;
 use App\Core\Request;
 use App\Core\Router;
 use App\Core\Translator;
+use App\Repository\ReservaRepository;
+use App\Service\ReservaService;
 
 require __DIR__ . '/../backend/vendor/autoload.php';
 
@@ -20,16 +24,21 @@ header('X-Frame-Options: DENY');
 $translator = new Translator('es');
 $response = new JsonResponse();
 $errorHandler = new ErrorHandler($translator, $response);
-
-$router = new Router();
-
-// Ruta provisional: devuelve una lista vacía hasta conectar con la base de datos.
-$router->add('GET', '/api/reservas', function () use ($response) {
-    $response->send([]);
-});
+$request = new Request();
 
 try {
-    $router->dispatch(new Request());
+    // El .env vive en backend/, fuera de la carpeta pública, para que el navegador nunca lo alcance.
+    $config = parse_ini_file(__DIR__ . '/../backend/.env', false, INI_SCANNER_RAW);
+
+    $repository = new ReservaRepository((new Database($config))->connect());
+    $service = new ReservaService($repository);
+    $controller = new ReservaApiController($service, $request, $response);
+
+    $router = new Router();
+    $router->add('GET', '/api/reservas', [$controller, 'listar']);
+    $router->add('GET', '/api/reservas/{id}', [$controller, 'detalle']);
+
+    $router->dispatch($request);
 } catch (Throwable $e) {
     $errorHandler->handle($e);
 }
