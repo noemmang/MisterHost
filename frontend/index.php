@@ -2,19 +2,34 @@
 
 declare(strict_types=1);
 
-use App\Core\Database;
+use App\Core\ErrorHandler;
+use App\Core\JsonResponse;
+use App\Core\Request;
+use App\Core\Router;
+use App\Core\Translator;
 
 require __DIR__ . '/../backend/vendor/autoload.php';
 
-// El .env vive en backend/, fuera de la carpeta pública, para que el navegador nunca lo alcance.
-$config = parse_ini_file(__DIR__ . '/../backend/.env', false, INI_SCANNER_RAW);
+// Los errores de PHP se guardan en el log, nunca se muestran al cliente.
+ini_set('display_errors', '0');
+
+// Cabeceras de seguridad para todas las respuestas.
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY');
+
+$translator = new Translator('es');
+$response = new JsonResponse();
+$errorHandler = new ErrorHandler($translator, $response);
+
+$router = new Router();
+
+// Ruta provisional: devuelve una lista vacía hasta conectar con la base de datos.
+$router->add('GET', '/api/reservas', function () use ($response) {
+    $response->send([]);
+});
 
 try {
-    (new Database($config))->connect();
-    echo 'MisterHost: conexión con la base de datos correcta';
-} catch (PDOException $e) {
-    // El detalle va al log del servidor; al cliente solo un mensaje genérico.
-    error_log($e->getMessage());
-    http_response_code(500);
-    echo 'No se pudo conectar con la base de datos';
+    $router->dispatch(new Request());
+} catch (Throwable $e) {
+    $errorHandler->handle($e);
 }
