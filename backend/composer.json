@@ -1,0 +1,14 @@
+{
+  "name": "misterhost/misterhost",
+  "description": "Gestión de reservas de alojamiento en PHP nativo",
+  "type": "project",
+  "require": {
+    "php": ">=8.2",
+    "ext-pdo_mysql": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  }
+}
