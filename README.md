@@ -10,7 +10,7 @@ En construcción.
 
 Requisitos: PHP 8.2+ con la extensión `pdo_mysql`, Composer y MySQL 8.0.16+ o MariaDB 10.2+.
 
-1. Crear la base de datos (recrea las tablas desde cero cada vez que se importa):
+1. Crear la base de datos con datos de ejemplo (recrea las tablas desde cero cada vez que se importa):
 
 ```bash
 mysql -u root -p -e "source database/reservas.sql"
@@ -34,14 +34,22 @@ composer install -d backend
 php -S localhost:8000 -t frontend
 ```
 
-Después abrir http://localhost:8000
+Después abrir http://localhost:8000/api/reservas
+
+## API
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/reservas` | Listado. Filtros combinables: `estado`, `desde`, `hasta` (sobre la fecha de entrada, formato AAAA-MM-DD) y `q` (nombre del huésped) |
+| GET | `/api/reservas/{id}` | Detalle con su historial de eventos |
 
 ## Decisiones
 
 - **Base de datos:** MySQL/MariaDB, porque la app es transaccional y ya había trabajado con ella en otros proyectos. El SQL es portable entre ambos.
 - **Entorno local:** XAMPP (PHP, Composer y MariaDB), por experiencia de uso en proyectos anteriores.
 - **Estructura:** `backend/` contiene todo el código PHP y no es accesible desde el navegador. `frontend/` es la única carpeta pública.
-- **Errores:** los errores internos se guardan en el log y el cliente solo recibe un mensaje genérico, para no exponer detalles.
+- **Capas:** el controlador recibe la petición, el servicio aplica las reglas y el repositorio es el único que escribe SQL.
+- **Seguridad:** consultas preparadas, filtros validados contra una lista de valores permitidos, y los errores internos solo se guardan en el log.
 - **Textos:** todos salen de `backend/lang/es.php`, listos para añadir otro idioma.
 - **Configuración:** los datos de conexión viven en `backend/.env`, fuera de la carpeta pública y fuera de Git.
 
