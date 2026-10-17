@@ -10,7 +10,7 @@ use DateTime;
 // Devuelve un código de error por cada campo incorrecto (array vacío si todo es correcto).
 class ReservaValidator
 {
-    // Valida los datos para crear una reserva, siempre empieza en pendiente.
+    // Valida los datos para crear una reserva. El estado no se pide: siempre empieza en pendiente.
     public function validarNueva(array $datos): array
     {
         $errores = [];
@@ -45,7 +45,7 @@ class ReservaValidator
             $errores['fecha_salida'] = 'fecha_salida_posterior';
         }
 
-        // El importe debe ser un número (no texto), no negativo y DECIMAL(10,2).
+        // El importe debe ser un número (no texto), no negativo y que quepa en DECIMAL(10,2).
         $importe = $datos['importe'] ?? null;
         if ((!is_int($importe) && !is_float($importe)) || $importe < 0 || $importe > 99999999.99) {
             $errores['importe'] = 'importe_no_valido';
@@ -60,7 +60,17 @@ class ReservaValidator
         return $errores;
     }
 
-    // Comprueba que el texto sea una fecha real con formato AAAA-MM-DD.
+    // Valida el nuevo estado de una reserva contra la lista de estados permitidos que se le pasa.
+    public function validarCambioEstado(array $datos, array $estados): array
+    {
+        if (!in_array($datos['estado'] ?? null, $estados, true)) {
+            return ['estado' => 'estado_no_valido'];
+        }
+
+        return [];
+    }
+
+    // Comprueba que el texto sea una fecha real con formato AAAA-MM-DD (rechaza por ejemplo 2026-02-31).
     public function esFecha(string $valor): bool
     {
         $fecha = DateTime::createFromFormat('Y-m-d', $valor);
