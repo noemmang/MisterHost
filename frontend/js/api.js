@@ -28,7 +28,7 @@ async function pedir(metodo, url, cuerpo) {
     return datos;
 }
 
-// Lista las reservas. Recibe los filtros como URLSearchParams (estado, desde, hasta y q).
+// Lista las reservas. Recibe los filtros como URLSearchParams (estado, desde, hasta, q y alojamiento).
 export function listarReservas(filtros) {
     return pedir('GET', '/api/reservas?' + filtros);
 }

@@ -39,6 +39,7 @@ function crearFila(reserva) {
         fecha_salida: formatearFecha(reserva.fecha_salida),
         estado: textos[reserva.estado],
         importe: formatearImporte(reserva.importe),
+        notas: reserva.notas || '',
     };
 
     for (const campo in valores) {

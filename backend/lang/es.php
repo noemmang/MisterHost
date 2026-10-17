@@ -49,6 +49,7 @@ return [
     'filtro.desde' => 'Entrada desde',
     'filtro.hasta' => 'Entrada hasta',
     'filtro.huesped' => 'Huésped',
+    'filtro.alojamiento' => 'Alojamiento',
     'filtro.filtrar' => 'Filtrar',
     'filtro.limpiar' => 'Limpiar',
 

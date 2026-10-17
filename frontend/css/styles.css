@@ -255,6 +255,14 @@ tbody tr:hover td:not([data-celda-seleccion]) {
     white-space: nowrap;
 }
 
+/* Las notas se cortan con puntos suspensivos para que no ensanchen la tabla. El texto completo está en el detalle */
+.celda-notas {
+    max-width: 20rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 /* Barra de acciones bajo la tabla, siempre visible */
 .barra-acciones {
     padding: var(--espacio-s) var(--espacio-m);
