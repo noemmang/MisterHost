@@ -1,4 +1,4 @@
-{# Plantilla base: estructura común de todas las páginas. Cada vista rellena el título y el contenido. #}
+{# Plantilla base: estructura común de todas las páginas. Cada vista rellena el título (que se muestra también en la cabecera), el contenido y, si lo necesita, el botón de volver y sus scripts. #}
 <!DOCTYPE html>
 <html lang="{{ idioma }}">
 <head>
@@ -10,11 +10,15 @@
 </head>
 <body>
     <header class="cabecera">
-        <a href="/">{{ t('app.nombre') }}</a>
+        <a class="marca" href="/">{{ t('app.nombre') }}</a>
+        <h1>{{ block('titulo') }}</h1>
+        {% block volver %}{% endblock %}
     </header>
 
     <main>
         {% block contenido %}{% endblock %}
     </main>
+
+    {% block scripts %}{% endblock %}
 </body>
 </html>

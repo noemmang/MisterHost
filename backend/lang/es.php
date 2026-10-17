@@ -22,12 +22,19 @@ return [
     'validacion.estado_no_valido' => 'Estado no válido',
 
     'app.nombre' => 'MisterHost',
-    'nav.volver_listado' => 'Volver al listado',
+    'nav.volver' => 'Volver',
+
+    'mensaje.cargando' => 'Cargando...',
+    'mensaje.error_red' => 'No se ha podido conectar con el servidor',
+    'mensaje.confirmar_cancelar' => '¿Cancelar las reservas seleccionadas?',
+    'mensaje.cancelacion_ok' => 'Cancelación realizada correctamente',
 
     'listado.titulo' => 'Reservas',
     'listado.vacio' => 'No hay reservas que coincidan con los filtros',
-    'listado.acciones' => 'Acciones',
     'listado.ver' => 'Ver detalle',
+    'listado.seleccionar' => 'Seleccionar reserva',
+    'listado.seleccionar_todas' => 'Seleccionar todas',
+    'listado.cancelar' => 'Cancelar seleccionadas',
 
     'filtro.estado' => 'Estado',
     'filtro.todos' => 'Todos',
@@ -37,7 +44,8 @@ return [
     'filtro.filtrar' => 'Filtrar',
     'filtro.limpiar' => 'Limpiar',
 
-    'detalle.titulo' => 'Reserva',
+    'detalle.titulo' => 'Detalle',
+    'detalle.resumen' => 'Resumen',
     'detalle.historial' => 'Historial',
 
     'reserva.id' => 'Nº',

@@ -1,14 +1,17 @@
 /* Ajustes para pantallas pequeñas (móvil). */
 @media (max-width: 600px) {
-    .cabecera {
-        padding: var(--espacio-m);
-    }
-
     .filtros label {
         flex: 1 1 100%;
     }
 
     .datos {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* En el detalle, resumen e historial pasan a una sola columna cuando no caben uno al lado del otro. */
+@media (max-width: 800px) {
+    .detalle {
         grid-template-columns: 1fr;
     }
 }

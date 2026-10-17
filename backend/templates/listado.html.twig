@@ -1,13 +1,11 @@
-{# Listado de reservas con sus filtros. #}
+{# Listado de reservas con sus filtros. El JS filtra, cancela y abre el detalle sin recargar; sin JS los filtros funcionan por la URL. #}
 {% extends 'base.html.twig' %}
 
 {% block titulo %}{{ t('listado.titulo') }}{% endblock %}
 
 {% block contenido %}
-    <h1>{{ t('listado.titulo') }}</h1>
-
     {# El formulario usa GET, así que filtra también sin JavaScript. #}
-    <form class="filtros" method="get" action="/">
+    <form class="filtros" method="get" action="/" data-filtros>
         <label>
             {{ t('filtro.estado') }}
             <select name="estado">
@@ -30,16 +28,21 @@
             <input type="search" name="q" value="{{ filtros.q }}">
         </label>
         <button type="submit">{{ t('filtro.filtrar') }}</button>
-        <a href="/">{{ t('filtro.limpiar') }}</a>
+        <a class="boton-secundario" href="/">{{ t('filtro.limpiar') }}</a>
     </form>
 
-    {% if reservas is empty %}
-        <p class="vacio">{{ t('listado.vacio') }}</p>
-    {% else %}
+    {# Avisos de carga, éxito y error que pinta el JS. #}
+    <p class="aviso" role="status" data-aviso hidden></p>
+
+    <p class="vacio" data-vacio{% if reservas is not empty %} hidden{% endif %}>{{ t('listado.vacio') }}</p>
+
+    {# Tabla con scroll propio y, debajo, la barra de acciones fija que actúa sobre las filas marcadas. #}
+    <div class="tabla" data-tabla{% if reservas is empty %} hidden{% endif %}>
         <div class="tabla-scroll">
             <table>
                 <thead>
                     <tr>
+                        <th><input type="checkbox" data-seleccionar-todas aria-label="{{ t('listado.seleccionar_todas') }}"></th>
                         <th>{{ t('reserva.id') }}</th>
                         <th>{{ t('reserva.nombre_huesped') }}</th>
                         <th>{{ t('reserva.nombre_alojamiento') }}</th>
@@ -47,12 +50,14 @@
                         <th>{{ t('reserva.fecha_salida') }}</th>
                         <th>{{ t('reserva.estado') }}</th>
                         <th>{{ t('reserva.importe') }}</th>
-                        <th>{{ t('listado.acciones') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for reserva in reservas %}
-                        <tr>
+                        {# Pulsar la fila (menos la casilla) abre el detalle. El title de la fila es su tooltip y la celda de la casilla lo vacía para no mostrarlo. #}
+                        <tr data-id="{{ reserva.id }}" title="{{ t('listado.ver') }}">
+                            {# Una reserva cancelada ya no se puede cancelar, así que no se puede marcar. #}
+                            <td data-celda-seleccion title=""><input type="checkbox" value="{{ reserva.id }}" data-seleccion aria-label="{{ t('listado.seleccionar') }}"{% if reserva.estado == 'cancelada' %} disabled{% endif %}></td>
                             <td>{{ reserva.id }}</td>
                             <td>{{ reserva.nombre_huesped }}</td>
                             <td>{{ reserva.nombre_alojamiento }}</td>
@@ -61,11 +66,43 @@
                             {# La clase estado-xxx da el color según el estado. #}
                             <td><span class="estado estado-{{ reserva.estado }}">{{ t('reserva.estado.' ~ reserva.estado) }}</span></td>
                             <td class="importe">{{ reserva.importe|number_format(2, ',', '.') }} {{ t('reserva.moneda') }}</td>
-                            <td><a href="/reservas/{{ reserva.id }}">{{ t('listado.ver') }}</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-    {% endif %}
+
+        <div class="barra-acciones">
+            <button type="button" class="cancelar" data-accion="cancelar" disabled>{{ t('listado.cancelar') }}</button>
+        </div>
+    </div>
+
+    {# Fila que el JS copia para cada reserva al repintar la tabla. Debe quedar igual que las filas de arriba. #}
+    <template data-plantilla-fila>
+        <tr title="{{ t('listado.ver') }}">
+            <td data-celda-seleccion title=""><input type="checkbox" data-seleccion aria-label="{{ t('listado.seleccionar') }}"></td>
+            <td data-campo="id"></td>
+            <td data-campo="nombre_huesped"></td>
+            <td data-campo="nombre_alojamiento"></td>
+            <td data-campo="fecha_entrada"></td>
+            <td data-campo="fecha_salida"></td>
+            <td><span class="estado" data-campo="estado"></span></td>
+            <td class="importe" data-campo="importe"></td>
+        </tr>
+    </template>
+
+    {# Textos que necesita el JS: nombre de cada estado, moneda y mensajes. #}
+    <div hidden data-textos
+        data-pendiente="{{ t('reserva.estado.pendiente') }}"
+        data-confirmada="{{ t('reserva.estado.confirmada') }}"
+        data-cancelada="{{ t('reserva.estado.cancelada') }}"
+        data-moneda="{{ t('reserva.moneda') }}"
+        data-cargando="{{ t('mensaje.cargando') }}"
+        data-error-red="{{ t('mensaje.error_red') }}"
+        data-confirmar="{{ t('mensaje.confirmar_cancelar') }}"
+        data-cancelacion-ok="{{ t('mensaje.cancelacion_ok') }}"></div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="module" src="/js/listado.js"></script>
 {% endblock %}
