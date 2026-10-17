@@ -19,7 +19,7 @@ class ReservaApiController
     }
 
     // Obtiene el listado de reservas aplicando los filtros recibidos por los parámetros de la URL.
-    // GET /api/reservas?estado=&desde=&hasta=&q=
+    // GET /api/reservas?estado=&desde=&hasta=&q=&alojamiento=
     public function listar(): void
     {
         $filtros = [
@@ -27,6 +27,7 @@ class ReservaApiController
             'desde' => $this->request->query('desde'),
             'hasta' => $this->request->query('hasta'),
             'q' => $this->request->query('q'),
+            'alojamiento' => $this->request->query('alojamiento'),
         ];
 
         $this->response->send($this->service->listar($filtros));

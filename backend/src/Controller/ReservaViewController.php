@@ -19,7 +19,7 @@ class ReservaViewController
     }
 
     // Pinta el listado de reservas con los mismos filtros que la API, recibidos por la URL.
-    // GET /?estado=&desde=&hasta=&q=
+    // GET /?estado=&desde=&hasta=&q=&alojamiento=
     public function listar(): void
     {
         $filtros = [
@@ -27,6 +27,7 @@ class ReservaViewController
             'desde' => $this->request->query('desde'),
             'hasta' => $this->request->query('hasta'),
             'q' => $this->request->query('q'),
+            'alojamiento' => $this->request->query('alojamiento'),
         ];
 
         echo $this->twig->render('listado.html.twig', [

@@ -14,7 +14,7 @@ class ReservaRepository
     {
     }
 
-    // Devuelve las reservas que cumplan los filtros (estado, desde, hasta y q).
+    // Devuelve las reservas que cumplan los filtros (estado, desde, hasta, q y alojamiento).
     // Los filtros que vengan a null se ignoran. Los valores siempre van como parámetros, nunca dentro del texto del SQL.
     public function listar(array $filtros): array
     {
@@ -38,10 +38,13 @@ class ReservaRepository
         }
 
         if ($filtros['q'] !== null) {
-            // Se escapan % y _ para que se busquen como texto normal y no como comodines.
-            $texto = str_replace(['%', '_'], ['\%', '\_'], $filtros['q']);
             $sql .= ' AND nombre_huesped LIKE :q';
-            $params['q'] = '%' . $texto . '%';
+            $params['q'] = $this->patronContiene($filtros['q']);
+        }
+
+        if ($filtros['alojamiento'] !== null) {
+            $sql .= ' AND nombre_alojamiento LIKE :alojamiento';
+            $params['alojamiento'] = $this->patronContiene($filtros['alojamiento']);
         }
 
         $sql .= ' ORDER BY fecha_entrada DESC, id DESC';
@@ -121,6 +124,13 @@ class ReservaRepository
             $this->db->rollBack();
             throw $e;
         }
+    }
+
+    // Prepara un texto para buscarlo dentro de otro con LIKE.
+    // Se escapan % y _ para que se busquen como texto normal y no como comodines.
+    private function patronContiene(string $texto): string
+    {
+        return '%' . str_replace(['%', '_'], ['\%', '\_'], $texto) . '%';
     }
 
     // Añade una fila al historial de la reserva. Se usa siempre dentro de una transacción.
