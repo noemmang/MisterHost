@@ -7,9 +7,10 @@ namespace App\Core;
 use Exception;
 
 // Error esperado que se devuelve al cliente con un código HTTP.
+// En los errores de validación lleva además un código de error por campo.
 class HttpException extends Exception
 {
-    public function __construct(private int $status, private string $codigo)
+    public function __construct(private int $status, private string $codigo, private array $campos = [])
     {
         parent::__construct($codigo);
     }
@@ -22,5 +23,10 @@ class HttpException extends Exception
     public function getCodigo(): string
     {
         return $this->codigo;
+    }
+
+    public function getCampos(): array
+    {
+        return $this->campos;
     }
 }
