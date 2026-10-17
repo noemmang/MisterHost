@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use PDO;
+use Throwable;
 
 // Único sitio con SQL de las reservas y su historial.
 class ReservaRepository
@@ -77,5 +78,44 @@ class ReservaRepository
         $reserva['eventos'] = $consulta->fetchAll();
 
         return $reserva;
+    }
+
+    // Inserta una reserva y su evento inicial en una transacción, para no dejar historial huérfano.
+    // La reserva trae las claves de las columnas y el evento trae tipo y descripcion. Devuelve el id creado.
+    public function crear(array $reserva, array $evento): int
+    {
+        $this->db->beginTransaction();
+
+        try {
+            $consulta = $this->db->prepare(
+                'INSERT INTO reserva (nombre_huesped, email_huesped, nombre_alojamiento, fecha_entrada,
+                    fecha_salida, estado, importe, notas)
+                VALUES (:nombre_huesped, :email_huesped, :nombre_alojamiento, :fecha_entrada,
+                    :fecha_salida, :estado, :importe, :notas)'
+            );
+            $consulta->execute($reserva);
+            $id = (int) $this->db->lastInsertId();
+
+            $this->insertarEvento($id, $evento);
+            $this->db->commit();
+        } catch (Throwable $e) {
+            $this->db->rollBack();
+            throw $e;
+        }
+
+        return $id;
+    }
+
+    // Añade una fila al historial de la reserva. Se usa siempre dentro de una transacción.
+    private function insertarEvento(int $reservaId, array $evento): void
+    {
+        $consulta = $this->db->prepare(
+            'INSERT INTO reserva_evento (reserva_id, tipo, descripcion) VALUES (:reserva_id, :tipo, :descripcion)'
+        );
+        $consulta->execute([
+            'reserva_id' => $reservaId,
+            'tipo' => $evento['tipo'],
+            'descripcion' => $evento['descripcion'],
+        ]);
     }
 }
