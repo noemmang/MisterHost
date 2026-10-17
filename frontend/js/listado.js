@@ -1,4 +1,5 @@
 import { listarReservas, cambiarEstado } from './api.js';
+import { ejecutar } from './aviso.js';
 
 // Elementos de la página. Los textos los entrega la plantilla en los atributos data- de [data-textos].
 const formulario = document.querySelector('[data-filtros]');
@@ -8,15 +9,7 @@ const plantillaFila = document.querySelector('[data-plantilla-fila]');
 const seleccionarTodas = document.querySelector('[data-seleccionar-todas]');
 const botonCancelar = document.querySelector('[data-accion="cancelar"]');
 const sinResultados = document.querySelector('[data-vacio]');
-const aviso = document.querySelector('[data-aviso]');
 const textos = document.querySelector('[data-textos]').dataset;
-
-// Muestra un aviso de tipo cargando, exito o error. Con texto vacío lo oculta.
-function mostrarAviso(texto, tipo) {
-    aviso.textContent = texto;
-    aviso.className = 'aviso aviso-' + tipo;
-    aviso.hidden = texto === '';
-}
 
 // Pasa una fecha AAAA-MM-DD a DD/MM/AAAA, igual que en la plantilla Twig.
 function formatearFecha(fecha) {
@@ -90,19 +83,6 @@ async function cargarListado() {
     const filtros = new URLSearchParams(new FormData(formulario));
 
     repintarTabla(await listarReservas(filtros));
-}
-
-// Muestra "cargando" mientras dura la acción y después el aviso de éxito (o el de error si falla).
-// Si el error no trae mensaje (sin red), se usa el texto de error de conexión.
-async function ejecutar(accion, textoExito) {
-    mostrarAviso(textos.cargando, 'cargando');
-
-    try {
-        await accion();
-        mostrarAviso(textoExito, 'exito');
-    } catch (error) {
-        mostrarAviso(error.message || textos.errorRed, 'error');
-    }
 }
 
 // Cancela las reservas marcadas tras pedir confirmación. Se cancelan una a una.
