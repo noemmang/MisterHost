@@ -1,0 +1,199 @@
+:root {
+    /* Colores */
+    --color-fondo: #f5f6f8;
+    --color-superficie: #ffffff;
+    --color-texto: #1f2933;
+    --color-texto-suave: #52606d;
+    --color-borde: #d9dde3;
+    --color-primario: #1d4ed8;
+    --color-pendiente: #b45309;
+    --color-pendiente-fondo: #fef3c7;
+    --color-confirmada: #166534;
+    --color-confirmada-fondo: #dcfce7;
+    --color-cancelada: #991b1b;
+    --color-cancelada-fondo: #fee2e2;
+
+    /* Espaciados, bordes y tipografía */
+    --espacio-s: 0.5rem;
+    --espacio-m: 1rem;
+    --espacio-l: 2rem;
+    --radio: 6px;
+    --borde: 1px solid var(--color-borde);
+    --texto-pequeno: 0.85rem;
+    --fuente: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Estilos base de toda la página */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: var(--fuente);
+    line-height: 1.5;
+}
+
+a {
+    color: var(--color-primario);
+}
+
+/* Cabecera con el nombre de la app */
+.cabecera {
+    padding: var(--espacio-m) var(--espacio-l);
+    background: var(--color-superficie);
+    border-bottom: var(--borde);
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.cabecera a {
+    color: var(--color-texto);
+    text-decoration: none;
+}
+
+/* Zona central donde va el contenido de cada página */
+main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: var(--espacio-l) var(--espacio-m);
+}
+
+/* Campos y botones de los formularios */
+input,
+select,
+button {
+    padding: var(--espacio-s);
+    border: var(--borde);
+    border-radius: var(--radio);
+    font: inherit;
+}
+
+button {
+    background: var(--color-primario);
+    border-color: var(--color-primario);
+    color: var(--color-superficie);
+    cursor: pointer;
+}
+
+/* Filtros del listado */
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--espacio-m);
+    margin-bottom: var(--espacio-l);
+    padding: var(--espacio-m);
+    background: var(--color-superficie);
+    border: var(--borde);
+    border-radius: var(--radio);
+}
+
+.filtros label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-s);
+    font-size: var(--texto-pequeno);
+    color: var(--color-texto-suave);
+}
+
+/* Tabla de reservas. El contenedor da scroll horizontal en pantallas pequeñas */
+.tabla-scroll {
+    overflow-x: auto;
+    background: var(--color-superficie);
+    border: var(--borde);
+    border-radius: var(--radio);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: var(--espacio-s) var(--espacio-m);
+    border-bottom: var(--borde);
+    text-align: left;
+    white-space: nowrap;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.importe {
+    text-align: right;
+}
+
+.vacio {
+    color: var(--color-texto-suave);
+}
+
+/* Etiqueta de estado, con un color para cada estado */
+.estado {
+    padding: 0 var(--espacio-s);
+    border-radius: var(--radio);
+    font-size: var(--texto-pequeno);
+    font-weight: bold;
+}
+
+.estado-pendiente {
+    background: var(--color-pendiente-fondo);
+    color: var(--color-pendiente);
+}
+
+.estado-confirmada {
+    background: var(--color-confirmada-fondo);
+    color: var(--color-confirmada);
+}
+
+.estado-cancelada {
+    background: var(--color-cancelada-fondo);
+    color: var(--color-cancelada);
+}
+
+/* Datos de la reserva en el detalle: nombre del dato a la izquierda y valor a la derecha */
+.datos {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--espacio-s) var(--espacio-l);
+    padding: var(--espacio-m);
+    background: var(--color-superficie);
+    border: var(--borde);
+    border-radius: var(--radio);
+}
+
+.datos dt {
+    color: var(--color-texto-suave);
+}
+
+.datos dd {
+    margin: 0;
+}
+
+/* Las notas conservan los saltos de línea que escribió el usuario */
+.notas {
+    white-space: pre-line;
+}
+
+/* Historial de eventos de la reserva */
+.timeline {
+    margin: 0;
+    padding: 0 0 0 var(--espacio-m);
+    border-left: 2px solid var(--color-borde);
+    list-style: none;
+}
+
+.timeline li {
+    margin-bottom: var(--espacio-m);
+    padding-left: var(--espacio-m);
+}
+
+.timeline time {
+    display: block;
+    font-size: var(--texto-pequeno);
+    color: var(--color-texto-suave);
+}

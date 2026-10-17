@@ -1,0 +1,14 @@
+/* Ajustes para pantallas pequeñas (móvil). */
+@media (max-width: 600px) {
+    .cabecera {
+        padding: var(--espacio-m);
+    }
+
+    .filtros label {
+        flex: 1 1 100%;
+    }
+
+    .datos {
+        grid-template-columns: 1fr;
+    }
+}
