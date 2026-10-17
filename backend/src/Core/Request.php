@@ -31,4 +31,16 @@ class Request
 
         return trim($valor);
     }
+
+    // Cuerpo de la petición leído como JSON. Lanza 400 si está vacío o no es un JSON de tipo objeto.
+    public function body(): array
+    {
+        $datos = json_decode(file_get_contents('php://input'), true);
+
+        if (!is_array($datos)) {
+            throw new HttpException(400, 'json_no_valido');
+        }
+
+        return $datos;
+    }
 }
