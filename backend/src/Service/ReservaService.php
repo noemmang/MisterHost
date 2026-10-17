@@ -13,6 +13,13 @@ class ReservaService
 {
     const ESTADOS = ['pendiente', 'confirmada', 'cancelada'];
 
+    // Estados a los que se puede pasar desde cada estado. Una reserva cancelada no cambia más.
+    const TRANSICIONES = [
+        'pendiente' => ['confirmada', 'cancelada'],
+        'confirmada' => ['cancelada'],
+        'cancelada' => [],
+    ];
+
     public function __construct(
         private ReservaRepository $repository,
         private ReservaValidator $validator,
@@ -65,6 +72,29 @@ class ReservaService
         $evento = ['tipo' => 'creada', 'descripcion' => $this->translator->t('evento.creada')];
 
         $id = $this->repository->crear($reserva, $evento);
+
+        return $this->obtener($id);
+    }
+
+    // Cambia el estado de una reserva y la devuelve actualizada.
+    // Lanza 422 si el estado no es válido, 404 si la reserva no existe y 409 si la transición no está permitida.
+    public function cambiarEstado(int $id, array $datos): array
+    {
+        $errores = $this->validator->validarCambioEstado($datos, self::ESTADOS);
+
+        if ($errores !== []) {
+            throw new HttpException(422, 'validacion', $errores);
+        }
+
+        $reserva = $this->obtener($id);
+        $estado = $datos['estado'];
+
+        if (!in_array($estado, self::TRANSICIONES[$reserva['estado']], true)) {
+            throw new HttpException(409, 'transicion_no_valida');
+        }
+
+        $evento = ['tipo' => $estado, 'descripcion' => $this->translator->t('evento.' . $estado)];
+        $this->repository->cambiarEstado($id, $estado, $evento);
 
         return $this->obtener($id);
     }

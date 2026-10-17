@@ -39,6 +39,7 @@ try {
     $router->add('GET', '/api/reservas', [$controller, 'listar']);
     $router->add('GET', '/api/reservas/{id}', [$controller, 'detalle']);
     $router->add('POST', '/api/reservas', [$controller, 'crear']);
+    $router->add('PATCH', '/api/reservas/{id}/estado', [$controller, 'cambiarEstado']);
 
     $router->dispatch($request);
 } catch (Throwable $e) {

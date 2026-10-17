@@ -9,6 +9,7 @@ return [
     'error.filtro_no_valido' => 'Los filtros de búsqueda no son válidos',
     'error.json_no_valido' => 'El cuerpo de la petición no es un JSON válido',
     'error.validacion' => 'Datos no válidos',
+    'error.transicion_no_valida' => 'No se puede cambiar la reserva a ese estado',
     'error.interno' => 'Ha ocurrido un error inesperado',
 
     'validacion.obligatorio' => 'Campo obligatorio',
@@ -18,6 +19,9 @@ return [
     'validacion.fecha_salida_posterior' => 'La fecha de salida debe ser posterior a la de entrada',
     'validacion.importe_no_valido' => 'Importe no válido',
     'validacion.notas_no_validas' => 'Notas no válidas (máximo 1000 caracteres)',
+    'validacion.estado_no_valido' => 'Estado no válido',
 
     'evento.creada' => 'Reserva creada en estado pendiente',
+    'evento.confirmada' => 'Reserva confirmada',
+    'evento.cancelada' => 'Reserva cancelada',
 ];

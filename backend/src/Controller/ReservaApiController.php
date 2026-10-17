@@ -45,4 +45,11 @@ class ReservaApiController
     {
         $this->response->send($this->service->crear($this->request->body()), 201);
     }
+
+    // Cambia el estado de una reserva con el JSON recibido (por ejemplo {"estado": "cancelada"}).
+    // PATCH /api/reservas/{id}/estado
+    public function cambiarEstado(int $id): void
+    {
+        $this->response->send($this->service->cambiarEstado($id, $this->request->body()));
+    }
 }
