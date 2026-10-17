@@ -50,6 +50,7 @@ try {
 
     $router = new Router();
     $router->add('GET', '/', [$viewController, 'listar']);
+    $router->add('GET', '/reservas/nueva', [$viewController, 'formulario']);
     $router->add('GET', '/reservas/{id}', [$viewController, 'detalle']);
     $router->add('GET', '/api/reservas', [$apiController, 'listar']);
     $router->add('GET', '/api/reservas/{id}', [$apiController, 'detalle']);

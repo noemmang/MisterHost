@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 // Textos de la app en español. Cada clave se pide con Translator.
 return [
+    // ---------- Errores de la API ----------
     'error.no_encontrado' => 'El recurso solicitado no existe',
     'error.metodo_no_permitido' => 'Método no permitido',
     'error.filtro_no_valido' => 'Los filtros de búsqueda no son válidos',
@@ -12,6 +13,7 @@ return [
     'error.transicion_no_valida' => 'No se puede cambiar la reserva a ese estado',
     'error.interno' => 'Ha ocurrido un error inesperado',
 
+    // ---------- Errores de validación de cada campo ----------
     'validacion.obligatorio' => 'Campo obligatorio',
     'validacion.demasiado_largo' => 'Texto demasiado largo',
     'validacion.email_no_valido' => 'Email no válido',
@@ -21,21 +23,27 @@ return [
     'validacion.notas_no_validas' => 'Notas no válidas (máximo 1000 caracteres)',
     'validacion.estado_no_valido' => 'Estado no válido',
 
+    // ---------- General ----------
     'app.nombre' => 'MisterHost',
     'nav.volver' => 'Volver',
 
+    // ---------- Avisos y confirmaciones ----------
     'mensaje.cargando' => 'Cargando...',
     'mensaje.error_red' => 'No se ha podido conectar con el servidor',
     'mensaje.confirmar_cancelar' => '¿Cancelar las reservas seleccionadas?',
     'mensaje.cancelacion_ok' => 'Cancelación realizada correctamente',
+    'mensaje.creacion_ok' => 'Reserva creada correctamente',
 
+    // ---------- Página del listado ----------
     'listado.titulo' => 'Reservas',
     'listado.vacio' => 'No hay reservas que coincidan con los filtros',
     'listado.ver' => 'Ver detalle',
     'listado.seleccionar' => 'Seleccionar reserva',
     'listado.seleccionar_todas' => 'Seleccionar todas',
     'listado.cancelar' => 'Cancelar seleccionadas',
+    'listado.nueva' => 'Nueva reserva',
 
+    // ---------- Filtros del listado ----------
     'filtro.estado' => 'Estado',
     'filtro.todos' => 'Todos',
     'filtro.desde' => 'Entrada desde',
@@ -44,10 +52,16 @@ return [
     'filtro.filtrar' => 'Filtrar',
     'filtro.limpiar' => 'Limpiar',
 
+    // ---------- Página del formulario de nueva reserva ----------
+    'formulario.titulo' => 'Nueva reserva',
+    'formulario.crear' => 'Crear reserva',
+
+    // ---------- Página del detalle ----------
     'detalle.titulo' => 'Detalle',
     'detalle.resumen' => 'Resumen',
     'detalle.historial' => 'Historial',
 
+    // ---------- Datos de la reserva ----------
     'reserva.id' => 'Nº',
     'reserva.nombre_huesped' => 'Huésped',
     'reserva.email_huesped' => 'Email',
@@ -63,6 +77,7 @@ return [
     'reserva.estado.confirmada' => 'Confirmada',
     'reserva.estado.cancelada' => 'Cancelada',
 
+    // ---------- Descripción de los eventos del historial ----------
     'evento.creada' => 'Reserva creada en estado pendiente',
     'evento.confirmada' => 'Reserva confirmada',
     'evento.cancelada' => 'Reserva cancelada',

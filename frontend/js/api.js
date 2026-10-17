@@ -1,7 +1,8 @@
 // Única capa de acceso a la API.
 
 // Hace la petición y devuelve el JSON de la respuesta.
-// Si la API responde con error, lanza un Error con el mensaje del servidor.
+// Si la API responde con error, lanza un Error con el mensaje del servidor
+// y, si trae errores por campo, en error.campos.
 // Si no hay red o la respuesta no es JSON, lanza un Error sin mensaje.
 async function pedir(metodo, url, cuerpo) {
     let respuesta;
@@ -19,7 +20,9 @@ async function pedir(metodo, url, cuerpo) {
     }
 
     if (!respuesta.ok) {
-        throw new Error(datos.error.mensaje);
+        const error = new Error(datos.error.mensaje);
+        error.campos = datos.error.campos;
+        throw error;
     }
 
     return datos;
@@ -33,4 +36,9 @@ export function listarReservas(filtros) {
 // Cambia el estado de una reserva (por ejemplo a 'cancelada').
 export function cambiarEstado(id, estado) {
     return pedir('PATCH', '/api/reservas/' + id + '/estado', { estado: estado });
+}
+
+// Crea una reserva con los datos del formulario.
+export function crearReserva(datos) {
+    return pedir('POST', '/api/reservas', datos);
 }

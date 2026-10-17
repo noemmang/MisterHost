@@ -1,0 +1,72 @@
+{# Formulario de nueva reserva. El JS lo valida y lo envía a la API sin recargar la página; los errores del servidor salen bajo cada campo. #}
+{% extends 'base.html.twig' %}
+
+{% block titulo %}{{ t('formulario.titulo') }}{% endblock %}
+
+{% block volver %}<a class="volver" href="/">{{ t('nav.volver') }}</a>{% endblock %}
+
+{% block contenido %}
+    {# novalidate: la validación la hace el JS para mostrar los textos de la app y no los del navegador. #}
+    <form class="formulario" data-formulario novalidate>
+        {# Avisos de carga, éxito y error que pinta el JS. #}
+        <p class="aviso ancho-completo" role="status" data-aviso hidden></p>
+
+        <label>
+            {{ t('reserva.nombre_huesped') }}
+            <input type="text" name="nombre_huesped" maxlength="120" required>
+            <small class="error-campo" data-error="nombre_huesped"></small>
+        </label>
+
+        <label>
+            {{ t('reserva.email_huesped') }}
+            <input type="email" name="email_huesped" maxlength="160" required>
+            <small class="error-campo" data-error="email_huesped"></small>
+        </label>
+
+        <label>
+            {{ t('reserva.nombre_alojamiento') }}
+            <input type="text" name="nombre_alojamiento" maxlength="160" required>
+            <small class="error-campo" data-error="nombre_alojamiento"></small>
+        </label>
+
+        <label>
+            {{ t('reserva.importe') }} ({{ t('reserva.moneda') }})
+            <input type="number" name="importe" min="0" step="0.01" required>
+            <small class="error-campo" data-error="importe"></small>
+        </label>
+
+        <label>
+            {{ t('reserva.fecha_entrada') }}
+            <input type="date" name="fecha_entrada" required>
+            <small class="error-campo" data-error="fecha_entrada"></small>
+        </label>
+
+        <label>
+            {{ t('reserva.fecha_salida') }}
+            <input type="date" name="fecha_salida" required>
+            <small class="error-campo" data-error="fecha_salida"></small>
+        </label>
+
+        <label class="ancho-completo">
+            {{ t('reserva.notas') }}
+            <textarea name="notas" rows="4" maxlength="1000"></textarea>
+            <small class="error-campo" data-error="notas"></small>
+        </label>
+
+        <button type="submit" class="ancho-completo">{{ t('formulario.crear') }}</button>
+    </form>
+
+    {# Textos que necesita el JS: errores de validación en el navegador y mensajes. #}
+    <div hidden data-textos
+        data-obligatorio="{{ t('validacion.obligatorio') }}"
+        data-email-no-valido="{{ t('validacion.email_no_valido') }}"
+        data-fecha-salida-posterior="{{ t('validacion.fecha_salida_posterior') }}"
+        data-importe-no-valido="{{ t('validacion.importe_no_valido') }}"
+        data-cargando="{{ t('mensaje.cargando') }}"
+        data-error-red="{{ t('mensaje.error_red') }}"
+        data-creacion-ok="{{ t('mensaje.creacion_ok') }}"></div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="module" src="/js/formulario.js"></script>
+{% endblock %}

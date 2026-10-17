@@ -104,6 +104,7 @@ main > * {
 /* Campos y botones de los formularios */
 input,
 select,
+textarea,
 button {
     padding: var(--espacio-s);
     border: var(--borde);
@@ -137,6 +138,18 @@ button:disabled {
     background: var(--color-hover);
 }
 
+/* Enlace con forma de botón principal para crear una reserva, a la derecha de los filtros */
+.boton-nuevo {
+    display: inline-block;
+    margin-left: auto;
+    padding: var(--espacio-s) var(--espacio-m);
+    border: 1px solid var(--color-primario);
+    border-radius: var(--radio);
+    background: var(--color-primario);
+    color: var(--color-superficie);
+    text-decoration: none;
+}
+
 /* Filtros del listado */
 .filtros {
     display: flex;
@@ -150,7 +163,8 @@ button:disabled {
     border-radius: var(--radio);
 }
 
-.filtros label {
+.filtros label,
+.formulario label {
     display: flex;
     flex-direction: column;
     gap: var(--espacio-s);
@@ -298,6 +312,38 @@ tbody tr:hover td:not([data-celda-seleccion]) {
 .detalle h2 {
     margin: 0 0 var(--espacio-m);
     font-size: 1.1rem;
+}
+
+/* Formulario de nueva reserva: tarjeta centrada con los campos en dos columnas */
+.formulario {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--espacio-m);
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: var(--espacio-m);
+    background: var(--color-superficie);
+    border: var(--borde);
+    border-radius: var(--radio);
+}
+
+.formulario input,
+.formulario textarea {
+    width: 100%;
+}
+
+.formulario textarea {
+    resize: vertical;
+}
+
+.ancho-completo {
+    grid-column: 1 / -1;
+}
+
+/* Error de un campo, justo debajo de él */
+.error-campo {
+    color: var(--color-cancelada);
 }
 
 /* Datos de la reserva: nombre del dato a la izquierda y valor a la derecha */

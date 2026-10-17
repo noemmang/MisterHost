@@ -36,6 +36,13 @@ class ReservaViewController
         ]);
     }
 
+    // Pinta el formulario para crear una reserva. El envío lo hace el JS contra la API.
+    // GET /reservas/nueva
+    public function formulario(): void
+    {
+        echo $this->twig->render('formulario.html.twig');
+    }
+
     // Pinta los datos de una reserva y su historial de eventos.
     // GET /reservas/{id}
     public function detalle(int $id): void
