@@ -42,6 +42,9 @@ Después abrir http://localhost:8000/api/reservas
 |---|---|---|
 | GET | `/api/reservas` | Listado. Filtros combinables: `estado`, `desde`, `hasta` (sobre la fecha de entrada, formato AAAA-MM-DD) y `q` (nombre del huésped) |
 | GET | `/api/reservas/{id}` | Detalle con su historial de eventos |
+| POST | `/api/reservas` | Crea una reserva en estado `pendiente` (201). Cuerpo JSON: `nombre_huesped`, `email_huesped`, `nombre_alojamiento`, `fecha_entrada`, `fecha_salida`, `importe` y `notas` (opcional) |
+
+Errores: 400 (JSON mal formado o filtro no válido), 404, 405 y 500. Si los datos no son válidos, 422 con el error de cada campo en `campos`.
 
 ## Decisiones
 
@@ -50,6 +53,8 @@ Después abrir http://localhost:8000/api/reservas
 - **Estructura:** `backend/` contiene todo el código PHP y no es accesible desde el navegador. `frontend/` es la única carpeta pública.
 - **Capas:** el controlador recibe la petición, el servicio aplica las reglas y el repositorio es el único que escribe SQL.
 - **Seguridad:** consultas preparadas, filtros validados contra una lista de valores permitidos, y los errores internos solo se guardan en el log.
+- **Validación:** el servidor valida todos los datos de entrada y no se fía del cliente. Solo se leen los campos conocidos y el estado inicial nunca lo decide el cliente.
+- **Historial:** crear una reserva y guardar su evento se hace en una sola transacción, así no queda historial huérfano.
 - **Textos:** todos salen de `backend/lang/es.php`, listos para añadir otro idioma.
 - **Configuración:** los datos de conexión viven en `backend/.env`, fuera de la carpeta pública y fuera de Git.
 
