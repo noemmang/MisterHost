@@ -6,55 +6,57 @@
 {% block volver %}<a class="volver" href="/">{{ t('nav.volver') }}</a>{% endblock %}
 
 {% block contenido %}
-    {# novalidate: la validación la hace el JS para mostrar los textos de la app y no los del navegador. #}
-    <form class="formulario" data-formulario novalidate>
-        {# Avisos de carga, éxito y error que pinta el JS. #}
-        <p class="aviso ancho-completo" role="status" data-aviso hidden></p>
+    <div class="pagina-formulario">
+        {# novalidate: la validación la hace el JS para mostrar los textos de la app y no los del navegador. #}
+        <form class="formulario" data-formulario novalidate>
+            <label>
+                {{ t('reserva.nombre_huesped') }}
+                <input type="text" name="nombre_huesped" maxlength="120" required>
+                <small class="error-campo" data-error="nombre_huesped"></small>
+            </label>
 
-        <label>
-            {{ t('reserva.nombre_huesped') }}
-            <input type="text" name="nombre_huesped" maxlength="120" required>
-            <small class="error-campo" data-error="nombre_huesped"></small>
-        </label>
+            <label>
+                {{ t('reserva.email_huesped') }}
+                <input type="email" name="email_huesped" maxlength="160" required>
+                <small class="error-campo" data-error="email_huesped"></small>
+            </label>
 
-        <label>
-            {{ t('reserva.email_huesped') }}
-            <input type="email" name="email_huesped" maxlength="160" required>
-            <small class="error-campo" data-error="email_huesped"></small>
-        </label>
+            <label>
+                {{ t('reserva.nombre_alojamiento') }}
+                <input type="text" name="nombre_alojamiento" maxlength="160" required>
+                <small class="error-campo" data-error="nombre_alojamiento"></small>
+            </label>
 
-        <label>
-            {{ t('reserva.nombre_alojamiento') }}
-            <input type="text" name="nombre_alojamiento" maxlength="160" required>
-            <small class="error-campo" data-error="nombre_alojamiento"></small>
-        </label>
+            <label>
+                {{ t('reserva.importe') }} ({{ t('reserva.moneda') }})
+                <input type="number" name="importe" min="0" step="0.01" required>
+                <small class="error-campo" data-error="importe"></small>
+            </label>
 
-        <label>
-            {{ t('reserva.importe') }} ({{ t('reserva.moneda') }})
-            <input type="number" name="importe" min="0" step="0.01" required>
-            <small class="error-campo" data-error="importe"></small>
-        </label>
+            <label>
+                {{ t('reserva.fecha_entrada') }}
+                <input type="date" name="fecha_entrada" required>
+                <small class="error-campo" data-error="fecha_entrada"></small>
+            </label>
 
-        <label>
-            {{ t('reserva.fecha_entrada') }}
-            <input type="date" name="fecha_entrada" required>
-            <small class="error-campo" data-error="fecha_entrada"></small>
-        </label>
+            <label>
+                {{ t('reserva.fecha_salida') }}
+                <input type="date" name="fecha_salida" required>
+                <small class="error-campo" data-error="fecha_salida"></small>
+            </label>
 
-        <label>
-            {{ t('reserva.fecha_salida') }}
-            <input type="date" name="fecha_salida" required>
-            <small class="error-campo" data-error="fecha_salida"></small>
-        </label>
+            <label class="ancho-completo">
+                {{ t('reserva.notas') }}
+                <textarea name="notas" rows="4" maxlength="1000"></textarea>
+                <small class="error-campo" data-error="notas"></small>
+            </label>
 
-        <label class="ancho-completo">
-            {{ t('reserva.notas') }}
-            <textarea name="notas" rows="4" maxlength="1000"></textarea>
-            <small class="error-campo" data-error="notas"></small>
-        </label>
+            <button type="submit" class="ancho-completo">{{ t('formulario.crear') }}</button>
+        </form>
 
-        <button type="submit" class="ancho-completo">{{ t('formulario.crear') }}</button>
-    </form>
+        {# Avisos de carga, éxito y error que pinta el JS. Van fuera del formulario, a su lado, para que al aparecer no muevan los campos. #}
+        <p class="aviso" role="status" data-aviso hidden></p>
+    </div>
 
     {# Textos que necesita el JS: errores de validación en el navegador y mensajes. #}
     <div hidden data-textos

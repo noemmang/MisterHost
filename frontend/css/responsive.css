@@ -16,3 +16,16 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* En el formulario, el aviso baja debajo de la tarjeta cuando a los lados no cabe. */
+@media (max-width: 1200px) {
+    .pagina-formulario {
+        grid-template-columns: minmax(0, 700px);
+        justify-content: center;
+    }
+
+    .pagina-formulario .formulario,
+    .pagina-formulario .aviso {
+        grid-column: 1;
+    }
+}

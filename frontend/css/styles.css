@@ -314,14 +314,28 @@ tbody tr:hover td:not([data-celda-seleccion]) {
     font-size: 1.1rem;
 }
 
-/* Formulario de nueva reserva: tarjeta centrada con los campos en dos columnas */
+/* Página del formulario: la tarjeta va centrada y el aviso a su derecha, fuera de ella, para que al aparecer no mueva los campos */
+.pagina-formulario {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 700px) 1fr;
+    gap: var(--espacio-m);
+    align-items: start;
+}
+
+.pagina-formulario .formulario {
+    grid-column: 2;
+}
+
+.pagina-formulario .aviso {
+    grid-column: 3;
+    margin: 0;
+}
+
+/* Tarjeta del formulario con los campos en dos columnas */
 .formulario {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--espacio-m);
-    width: 100%;
-    max-width: 700px;
-    margin: 0 auto;
     padding: var(--espacio-m);
     background: var(--color-superficie);
     border: var(--borde);
