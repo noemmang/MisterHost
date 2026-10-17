@@ -1,0 +1,53 @@
+{# Detalle de una reserva con su historial de eventos. #}
+{% extends 'base.html.twig' %}
+
+{% block titulo %}{{ t('detalle.titulo') }} {{ reserva.id }}{% endblock %}
+
+{% block contenido %}
+    <p><a href="/">{{ t('nav.volver_listado') }}</a></p>
+
+    <h1>{{ t('detalle.titulo') }} {{ reserva.id }}</h1>
+
+    <dl class="datos">
+        <dt>{{ t('reserva.estado') }}</dt>
+        <dd><span class="estado estado-{{ reserva.estado }}">{{ t('reserva.estado.' ~ reserva.estado) }}</span></dd>
+
+        <dt>{{ t('reserva.nombre_huesped') }}</dt>
+        <dd>{{ reserva.nombre_huesped }}</dd>
+
+        <dt>{{ t('reserva.email_huesped') }}</dt>
+        <dd>{{ reserva.email_huesped }}</dd>
+
+        <dt>{{ t('reserva.nombre_alojamiento') }}</dt>
+        <dd>{{ reserva.nombre_alojamiento }}</dd>
+
+        <dt>{{ t('reserva.fecha_entrada') }}</dt>
+        <dd>{{ reserva.fecha_entrada|date('d/m/Y') }}</dd>
+
+        <dt>{{ t('reserva.fecha_salida') }}</dt>
+        <dd>{{ reserva.fecha_salida|date('d/m/Y') }}</dd>
+
+        <dt>{{ t('reserva.importe') }}</dt>
+        <dd>{{ reserva.importe|number_format(2, ',', '.') }} {{ t('reserva.moneda') }}</dd>
+
+        {# Las notas son opcionales. #}
+        {% if reserva.notas %}
+            <dt>{{ t('reserva.notas') }}</dt>
+            <dd class="notas">{{ reserva.notas }}</dd>
+        {% endif %}
+
+        <dt>{{ t('reserva.fecha_creacion') }}</dt>
+        <dd>{{ reserva.fecha_creacion|date('d/m/Y H:i') }}</dd>
+    </dl>
+
+    <h2>{{ t('detalle.historial') }}</h2>
+
+    <ol class="timeline">
+        {% for evento in reserva.eventos %}
+            <li>
+                <time datetime="{{ evento.fecha_creacion }}">{{ evento.fecha_creacion|date('d/m/Y H:i') }}</time>
+                {{ evento.descripcion }}
+            </li>
+        {% endfor %}
+    </ol>
+{% endblock %}

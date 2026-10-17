@@ -4,7 +4,8 @@
   "type": "project",
   "require": {
     "php": ">=8.2",
-    "ext-pdo_mysql": "*"
+    "ext-pdo_mysql": "*",
+    "twig/twig": "^3.30"
   },
   "autoload": {
     "psr-4": {

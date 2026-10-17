@@ -1,0 +1,71 @@
+{# Listado de reservas con sus filtros. #}
+{% extends 'base.html.twig' %}
+
+{% block titulo %}{{ t('listado.titulo') }}{% endblock %}
+
+{% block contenido %}
+    <h1>{{ t('listado.titulo') }}</h1>
+
+    {# El formulario usa GET, así que filtra también sin JavaScript. #}
+    <form class="filtros" method="get" action="/">
+        <label>
+            {{ t('filtro.estado') }}
+            <select name="estado">
+                <option value="">{{ t('filtro.todos') }}</option>
+                {% for estado in estados %}
+                    <option value="{{ estado }}"{% if filtros.estado == estado %} selected{% endif %}>{{ t('reserva.estado.' ~ estado) }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>
+            {{ t('filtro.desde') }}
+            <input type="date" name="desde" value="{{ filtros.desde }}">
+        </label>
+        <label>
+            {{ t('filtro.hasta') }}
+            <input type="date" name="hasta" value="{{ filtros.hasta }}">
+        </label>
+        <label>
+            {{ t('filtro.huesped') }}
+            <input type="search" name="q" value="{{ filtros.q }}">
+        </label>
+        <button type="submit">{{ t('filtro.filtrar') }}</button>
+        <a href="/">{{ t('filtro.limpiar') }}</a>
+    </form>
+
+    {% if reservas is empty %}
+        <p class="vacio">{{ t('listado.vacio') }}</p>
+    {% else %}
+        <div class="tabla-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th>{{ t('reserva.id') }}</th>
+                        <th>{{ t('reserva.nombre_huesped') }}</th>
+                        <th>{{ t('reserva.nombre_alojamiento') }}</th>
+                        <th>{{ t('reserva.fecha_entrada') }}</th>
+                        <th>{{ t('reserva.fecha_salida') }}</th>
+                        <th>{{ t('reserva.estado') }}</th>
+                        <th>{{ t('reserva.importe') }}</th>
+                        <th>{{ t('listado.acciones') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reserva in reservas %}
+                        <tr>
+                            <td>{{ reserva.id }}</td>
+                            <td>{{ reserva.nombre_huesped }}</td>
+                            <td>{{ reserva.nombre_alojamiento }}</td>
+                            <td>{{ reserva.fecha_entrada|date('d/m/Y') }}</td>
+                            <td>{{ reserva.fecha_salida|date('d/m/Y') }}</td>
+                            {# La clase estado-xxx da el color según el estado. #}
+                            <td><span class="estado estado-{{ reserva.estado }}">{{ t('reserva.estado.' ~ reserva.estado) }}</span></td>
+                            <td class="importe">{{ reserva.importe|number_format(2, ',', '.') }} {{ t('reserva.moneda') }}</td>
+                            <td><a href="/reservas/{{ reserva.id }}">{{ t('listado.ver') }}</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}

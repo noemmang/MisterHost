@@ -1,0 +1,20 @@
+{# Plantilla base: estructura común de todas las páginas. Cada vista rellena el título y el contenido. #}
+<!DOCTYPE html>
+<html lang="{{ idioma }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block titulo %}{% endblock %} - {{ t('app.nombre') }}</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+    <header class="cabecera">
+        <a href="/">{{ t('app.nombre') }}</a>
+    </header>
+
+    <main>
+        {% block contenido %}{% endblock %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{# Página de error: muestra el código HTTP y su mensaje. #}
+{% extends 'base.html.twig' %}
+
+{% block titulo %}{{ status }}{% endblock %}
+
+{% block contenido %}
+    <h1>{{ status }}</h1>
+    <p>{{ mensaje }}</p>
+    <p><a href="/">{{ t('nav.volver_listado') }}</a></p>
+{% endblock %}
