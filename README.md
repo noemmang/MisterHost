@@ -41,6 +41,7 @@ Después abrir http://localhost:8000
 | Método | Ruta | Descripción |
 |---|---|---|
 | GET | `/` | Listado de reservas con filtros (`estado`, `desde`, `hasta`, `q`). Los filtros viajan por la URL, así que funcionan sin JavaScript |
+| GET | `/reservas/nueva` | Formulario para crear una reserva. Valida en el navegador, la envía a la API y muestra los errores que devuelva el servidor |
 | GET | `/reservas/{id}` | Detalle de una reserva con su historial de eventos |
 
 ## API
