@@ -11,6 +11,7 @@ use App\Core\Router;
 use App\Core\Translator;
 use App\Repository\ReservaRepository;
 use App\Service\ReservaService;
+use App\Service\ReservaValidator;
 
 require __DIR__ . '/../backend/vendor/autoload.php';
 
@@ -31,12 +32,13 @@ try {
     $config = parse_ini_file(__DIR__ . '/../backend/.env', false, INI_SCANNER_RAW);
 
     $repository = new ReservaRepository((new Database($config))->connect());
-    $service = new ReservaService($repository);
+    $service = new ReservaService($repository, new ReservaValidator(), $translator);
     $controller = new ReservaApiController($service, $request, $response);
 
     $router = new Router();
     $router->add('GET', '/api/reservas', [$controller, 'listar']);
     $router->add('GET', '/api/reservas/{id}', [$controller, 'detalle']);
+    $router->add('POST', '/api/reservas', [$controller, 'crear']);
 
     $router->dispatch($request);
 } catch (Throwable $e) {

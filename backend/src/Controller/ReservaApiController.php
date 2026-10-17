@@ -11,10 +11,14 @@ use App\Service\ReservaService;
 // Endpoints JSON de las reservas: recibe la petición y devuelve la respuesta.
 class ReservaApiController
 {
-    public function __construct( private ReservaService $service, private Request $request, private JsonResponse $response) {
+    public function __construct(
+        private ReservaService $service,
+        private Request $request,
+        private JsonResponse $response
+    ) {
     }
 
-    // Obtiene el listado de reservas aplicando los filtros recibidos por los parámetros de la URL
+    // Obtiene el listado de reservas aplicando los filtros recibidos por los parámetros de la URL.
     // GET /api/reservas?estado=&desde=&hasta=&q=
     public function listar(): void
     {
@@ -33,5 +37,12 @@ class ReservaApiController
     public function detalle(int $id): void
     {
         $this->response->send($this->service->obtener($id));
+    }
+
+    // Crea una reserva con el JSON recibido y devuelve la reserva creada con código 201.
+    // POST /api/reservas
+    public function crear(): void
+    {
+        $this->response->send($this->service->crear($this->request->body()), 201);
     }
 }
