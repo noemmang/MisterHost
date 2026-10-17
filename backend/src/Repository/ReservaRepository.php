@@ -106,6 +106,23 @@ class ReservaRepository
         return $id;
     }
 
+    // Cambia el estado de una reserva y guarda su evento en una transacción.
+    public function cambiarEstado(int $id, string $estado, array $evento): void
+    {
+        $this->db->beginTransaction();
+
+        try {
+            $consulta = $this->db->prepare('UPDATE reserva SET estado = :estado WHERE id = :id');
+            $consulta->execute(['estado' => $estado, 'id' => $id]);
+
+            $this->insertarEvento($id, $evento);
+            $this->db->commit();
+        } catch (Throwable $e) {
+            $this->db->rollBack();
+            throw $e;
+        }
+    }
+
     // Añade una fila al historial de la reserva. Se usa siempre dentro de una transacción.
     private function insertarEvento(int $reservaId, array $evento): void
     {
