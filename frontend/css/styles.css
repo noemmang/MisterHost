@@ -1,25 +1,31 @@
 :root {
-    /* Colores */
-    --color-fondo: #f5f6f8;
-    --color-superficie: #ffffff;
-    --color-texto: #1f2933;
-    --color-texto-suave: #52606d;
-    --color-borde: #d9dde3;
-    --color-hover: #e9ebee;
-    --color-primario: #1d4ed8;
-    --color-pendiente: #b45309;
-    --color-pendiente-fondo: #fef3c7;
-    --color-confirmada: #166534;
-    --color-confirmada-fondo: #dcfce7;
-    --color-cancelada: #991b1b;
-    --color-cancelada-fondo: #fee2e2;
+    /* Colores (tema oscuro) */
+    color-scheme: dark;
+    --color-fondo: #030712;
+    --color-superficie: #111827;
+    --color-texto: #f9fafb;
+    --color-texto-suave: #9ca3af;
+    --color-borde: #1f2937;
+    --color-hover: #1f2937;
+    --color-primario: #f59e0b;
+    --color-primario-hover: #fbbf24;
+    --color-sobre-primario: #030712;
+    --color-primario-suave: #1f2937;
+    --color-primario-suave-hover: #374151;
+    --color-enlace: #fbbf24;
+    --color-pendiente: #fbbf24;
+    --color-confirmada: #4ade80;
+    --color-confirmada-fondo: #052e16;
+    --color-cancelada: #f87171;
+    --color-cancelada-fondo: #450a0a;
+    --color-cancelada-fondo-hover: #7f1d1d;
 
     /* Espaciados, bordes y tipografía */
     --espacio-s: 0.5rem;
     --espacio-m: 1rem;
     --espacio-l: 2rem;
     --radio: 6px;
-    --sombra: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --sombra: 0 4px 12px rgba(0, 0, 0, 0.6);
     --borde: 1px solid var(--color-borde);
     --texto-pequeno: 0.85rem;
     --fuente: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -47,7 +53,7 @@ body {
 }
 
 a {
-    color: var(--color-primario);
+    color: var(--color-enlace);
 }
 
 /* Cabecera en tres zonas: la marca a la izquierda, el título de la página centrado y el botón de volver a la derecha */
@@ -73,14 +79,18 @@ a {
     text-decoration: none;
 }
 
-/* Botón de volver con forma de enlace, a la derecha de la cabecera */
+/* Botón de volver con forma de enlace, a la derecha de la cabecera. Sin contorno, con fondo suave que se oscurece al pasar el ratón */
 .volver {
     justify-self: end;
     padding: 0 var(--espacio-s);
-    border: var(--borde);
     border-radius: var(--radio);
+    background: var(--color-primario-suave);
     font-size: var(--texto-pequeno);
     text-decoration: none;
+}
+
+.volver:hover {
+    background: var(--color-primario-suave-hover);
 }
 
 .volver::before {
@@ -110,14 +120,21 @@ button {
     padding: var(--espacio-s);
     border: var(--borde);
     border-radius: var(--radio);
+    background: var(--color-fondo);
+    color: var(--color-texto);
     font: inherit;
 }
 
+/* Botones sin contorno: fondo de color y cambio de color al pasar el ratón (no si están desactivados) */
 button {
+    border: none;
     background: var(--color-primario);
-    border-color: var(--color-primario);
-    color: var(--color-superficie);
+    color: var(--color-sobre-primario);
     cursor: pointer;
+}
+
+button:not(:disabled):hover {
+    background: var(--color-primario-hover);
 }
 
 button:disabled {
@@ -125,18 +142,18 @@ button:disabled {
     cursor: not-allowed;
 }
 
-/* Enlace con forma de botón para acciones secundarias (por ejemplo Limpiar): borde y texto de color y relleno gris al pasar el ratón */
+/* Enlace con forma de botón para acciones secundarias (por ejemplo Limpiar): sin contorno, fondo suave y más oscuro al pasar el ratón */
 .boton-secundario {
     display: inline-block;
     padding: var(--espacio-s) var(--espacio-m);
-    border: 1px solid var(--color-primario);
     border-radius: var(--radio);
-    color: var(--color-primario);
+    background: var(--color-primario-suave);
+    color: var(--color-enlace);
     text-decoration: none;
 }
 
 .boton-secundario:hover {
-    background: var(--color-hover);
+    background: var(--color-primario-suave-hover);
 }
 
 /* Enlace con forma de botón principal para crear una reserva, a la derecha de los filtros */
@@ -144,11 +161,14 @@ button:disabled {
     display: inline-block;
     margin-left: auto;
     padding: var(--espacio-s) var(--espacio-m);
-    border: 1px solid var(--color-primario);
     border-radius: var(--radio);
     background: var(--color-primario);
-    color: var(--color-superficie);
+    color: var(--color-sobre-primario);
     text-decoration: none;
+}
+
+.boton-nuevo:hover {
+    background: var(--color-primario-hover);
 }
 
 /* Filtros del listado */
@@ -172,7 +192,6 @@ button:disabled {
 /* Botón que abre el menú de filtros: solo se ve en el móvil (ver responsive.css) */
 .boton-filtros {
     display: none;
-    background: var(--color-superficie);
 }
 
 .boton-filtros::after {
@@ -308,33 +327,30 @@ tbody tr:hover td:not([data-celda-seleccion]) {
     text-align: center;
 }
 
-/* Botón de cancelar, con el color del estado cancelada */
+/* Botón de cancelar, con el color del estado cancelada y más oscuro al pasar el ratón */
 .cancelar {
     background: var(--color-cancelada-fondo);
-    border-color: var(--color-cancelada);
     color: var(--color-cancelada);
 }
 
-/* Etiqueta de estado, con un color para cada estado */
+button.cancelar:not(:disabled):hover {
+    background: var(--color-cancelada-fondo-hover);
+}
+
+/* Estado de la reserva: solo texto en negrita, con un color para cada estado */
 .estado {
-    padding: 0 var(--espacio-s);
-    border-radius: var(--radio);
-    font-size: var(--texto-pequeno);
     font-weight: bold;
 }
 
 .estado-pendiente {
-    background: var(--color-pendiente-fondo);
     color: var(--color-pendiente);
 }
 
 .estado-confirmada {
-    background: var(--color-confirmada-fondo);
     color: var(--color-confirmada);
 }
 
 .estado-cancelada {
-    background: var(--color-cancelada-fondo);
     color: var(--color-cancelada);
 }
 
