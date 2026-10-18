@@ -22,7 +22,7 @@ mysql -u root -p -e "source database/reservas.sql"
 cp backend/.env.example backend/.env
 ```
 
-3. Instalar las dependencias (Twig):
+3. Instalar las dependencias (Twig y PHPUnit):
 
 ```bash
 composer install -d backend
@@ -36,11 +36,21 @@ php -S localhost:8000 -t frontend
 
 Después abrir http://localhost:8000
 
+## Tests
+
+Con la base de datos levantada y el `.env` configurado:
+
+```bash
+composer test -d backend
+```
+
+Cubren el validador, las transiciones de estado del servicio y los filtros del repositorio.
+
 ## Páginas
 
 | Método | Ruta | Descripción |
 |---|---|---|
-| GET | `/` | Listado de reservas con filtros (`estado`, `desde`, `hasta`, `q`). Los filtros viajan por la URL, así que funcionan sin JavaScript |
+| GET | `/` | Listado de reservas con filtros (`estado`, `desde`, `hasta`, `q`, `alojamiento`). Los filtros viajan por la URL, así que funcionan sin JavaScript |
 | GET | `/reservas/nueva` | Formulario para crear una reserva. Valida en el navegador, la envía a la API y muestra los errores que devuelva el servidor |
 | GET | `/reservas/{id}` | Detalle de una reserva con su historial de eventos |
 
@@ -48,7 +58,7 @@ Después abrir http://localhost:8000
 
 | Método | Ruta | Descripción |
 |---|---|---|
-| GET | `/api/reservas` | Listado. Filtros combinables: `estado`, `desde`, `hasta` (sobre la fecha de entrada, formato AAAA-MM-DD) y `q` (nombre del huésped) |
+| GET | `/api/reservas` | Listado. Filtros combinables: `estado`, `desde`, `hasta` (sobre la fecha de entrada, formato AAAA-MM-DD), `q` (nombre del huésped) y `alojamiento` (nombre del alojamiento) |
 | GET | `/api/reservas/{id}` | Detalle con su historial de eventos |
 | POST | `/api/reservas` | Crea una reserva en estado `pendiente` (201). Cuerpo JSON: `nombre_huesped`, `email_huesped`, `nombre_alojamiento`, `fecha_entrada`, `fecha_salida`, `importe` y `notas` (opcional) |
 | PATCH | `/api/reservas/{id}/estado` | Confirma o cancela una reserva. Cuerpo JSON: `{"estado": "confirmada"}` o `{"estado": "cancelada"}` |
@@ -68,6 +78,7 @@ Errores: 400 (JSON mal formado o filtro no válido), 404, 405, 409 (cambio de es
 - **Validación:** el servidor valida todos los datos de entrada y no se fía del cliente. Solo se leen los campos conocidos y el estado inicial nunca lo decide el cliente.
 - **Historial:** crear una reserva o cambiar su estado y guardar el evento se hace en una sola transacción, así no queda historial huérfano.
 - **Estados:** una reserva pendiente puede pasar a confirmada o cancelada, y una confirmada a cancelada. Una cancelada no cambia más. Las transiciones son una constante de `ReservaService`.
+- **Tests:** pocos y con sentido, con PHPUnit. El servicio se prueba con el repositorio simulado. Los filtros del repositorio se prueban contra la base de datos real, dentro de una transacción que se deshace, porque lo que hay que comprobar es el SQL y no se modifican los datos.
 - **Textos:** todos salen de `backend/lang/es.php`, listos para añadir otro idioma.
 - **Configuración:** los datos de conexión viven en `backend/.env`, fuera de la carpeta pública y fuera de Git.
 
