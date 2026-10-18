@@ -22,10 +22,11 @@ require __DIR__ . '/../backend/vendor/autoload.php';
 // Los errores de PHP se guardan en el log, nunca se muestran al cliente.
 ini_set('display_errors', '0');
 
-// Cabeceras de seguridad para todas las respuestas.
+// Cabeceras de seguridad para todas las respuestas. X-Powered-By se quita para no publicar la versión de PHP.
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
 header("Content-Security-Policy: default-src 'self'");
+header_remove('X-Powered-By');
 
 $idioma = 'es';
 $translator = new Translator($idioma);
