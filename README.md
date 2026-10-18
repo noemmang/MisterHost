@@ -52,7 +52,7 @@ Cubren el validador, las transiciones de estado del servicio y los filtros del r
 |---|---|---|
 | GET | `/` | Listado de reservas con filtros (`estado`, `desde`, `hasta`, `q`, `alojamiento`). Los filtros viajan por la URL, así que funcionan sin JavaScript |
 | GET | `/reservas/nueva` | Formulario para crear una reserva. Valida en el navegador, la envía a la API y muestra los errores que devuelva el servidor |
-| GET | `/reservas/{id}` | Detalle de una reserva con su historial de eventos |
+| GET | `/reservas/{id}` | Detalle de una reserva con su historial de eventos y un botón para cancelarla |
 
 ## API
 
@@ -77,7 +77,8 @@ Errores: 400 (JSON mal formado o filtro no válido), 404, 405, 409 (cambio de es
 - **Errores:** un único `ErrorHandler`: JSON en `/api` y una página de error en el resto.
 - **Validación:** el servidor valida todos los datos de entrada y no se fía del cliente. Solo se leen los campos conocidos y el estado inicial nunca lo decide el cliente.
 - **Historial:** crear una reserva o cambiar su estado y guardar el evento se hace en una sola transacción, así no queda historial huérfano.
-- **Estados:** una reserva pendiente puede pasar a confirmada o cancelada, y una confirmada a cancelada. Una cancelada no cambia más. Las transiciones son una constante de `ReservaService`.
+- **Estados:** una reserva pendiente puede pasar a confirmada o cancelada, y una confirmada a cancelada. Una cancelada no cambia más. Las transiciones son una constante de `ReservaService`. Confirmada significa que el alojamiento ha aceptado la reserva, no que ya se haya disfrutado: no hay un estado posterior.
+- **Interfaz y estados:** confirmar existe en la API (`PATCH`) y la interfaz solo cancela (desde el listado y desde el detalle), como pide el enunciado.
 - **Tests:** pocos y con sentido, con PHPUnit. El servicio se prueba con el repositorio simulado. Los filtros del repositorio se prueban contra la base de datos real, dentro de una transacción que se deshace, porque lo que hay que comprobar es el SQL y no se modifican los datos.
 - **Textos:** todos salen de `backend/lang/es.php`, listos para añadir otro idioma.
 - **Configuración:** los datos de conexión viven en `backend/.env`, fuera de la carpeta pública y fuera de Git.
@@ -85,17 +86,17 @@ Errores: 400 (JSON mal formado o filtro no válido), 404, 405, 409 (cambio de es
 ## Qué haría diferente con más tiempo
 
 - **CRUD completo:** la app crea, consulta y cancela reservas, pero no permite editar sus datos ni borrarlas. Se añadirían `PUT /api/reservas/{id}` (con la misma validación que al crear y un evento en el historial) y `DELETE /api/reservas/{id}`, con su formulario de edición.
-- **Orden del listado:** hoy el orden es fijo (por fecha de entrada, la más reciente primero). Se añadiría un parámetro de orden con una lista blanca de columnas (huésped, alojamiento, fechas, importe y estado) y su dirección, que se activaría pulsando la cabecera de cada columna.
-- **Filtros plegables en móvil:** meter la zona de filtros en un menú desplegable para que en pantallas pequeñas ocupe menos alto y la tabla gane espacio.
+- **Confirmar desde la interfaz:** botón de confirmar en el listado y en el detalle. Hoy la interfaz solo cancela, que es lo que pide el enunciado.
+- **Reservas ya disfrutadas:** un estado `completada` (o marcarlas al pasar la fecha de salida).
+- **Orden del listado:** hoy el orden es fijo (por fecha de entrada, la más reciente primero). Se añadiría un parámetro de orden, camiando asi el orden segun (huésped, alojamiento, fechas, importe y estado, etc).
 - **Docker:** un entorno reproducible (PHP, MariaDB y el servidor web) que se levante con un solo comando, sin depender de XAMPP.
 - **Migraciones versionadas:** en lugar de un único `.sql` que recrea todo, un fichero por cambio de esquema para poder evolucionar la base de datos sin perder datos.
 - **Alojamientos y disponibilidad:** una entidad `alojamiento` (con sus entidades `ciudad` y `pais`) a la que apunte la reserva, en lugar de un nombre en texto. Con ella se comprobaría la disponibilidad de fechas dentro de una transacción con bloqueo de filas, para que dos reservas simultáneas no se solapen.
 - **Concurrencia:** dos peticiones simultáneas sobre la misma reserva podrían saltarse la comprobación de la transición. Se arreglaría bloqueando la fila (`SELECT ... FOR UPDATE`) dentro de la transacción.
 - **Notificaciones:** un servicio que envíe emails al huésped al crear, confirmar o cancelar una reserva.
 - **Usuarios y roles:** autenticación con dos roles. El usuario normal solo vería y gestionaría sus propias reservas, y el administrador podría gestionarlas todas.
-- **Dominio propio:** servir la app desde un dominio propio con HTTPS, en lugar de la URL del hosting gratuito.
 - **Formato por idioma:** el formato de fechas e importes (`d/m/Y`, `1.234,50 €`) está fijo en las plantillas. Con más idiomas habría que formatearlos según el idioma activo.
-- **Dominio propio:** Si bien se sale de la regla de solo usar tegnologia nativa, usaria un framework y una libreria especializada en tablas como DevExtreme.
+- **Pramework y librerias:** Si bien se sale de la regla de solo usar tegnologia nativa, usaria un framework y una libreria especializada en tablas como DevExtreme.
 
 ## Escalabilidad
 
