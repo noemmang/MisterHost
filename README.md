@@ -4,7 +4,9 @@ Gestión de reservas de alojamiento en PHP nativo, Twig y JavaScript vanilla.
 Prueba técnica para MisterPlan.
 
 ## Estado
-En construcción.
+Funcional: API, vistas con Twig e interfaz con JavaScript.
+
+Despliegue en una URL pública: _Pendiente._
 
 ## Cómo levantarlo en local
 
@@ -73,7 +75,7 @@ Errores: 400 (JSON mal formado o filtro no válido), 404, 405, 409 (cambio de es
 - **Capas:** el controlador recibe la petición, el servicio aplica las reglas y el repositorio es el único que escribe SQL. Hay un controlador para la API y otro para las páginas, y los dos usan el mismo servicio.
 - **Seguridad:** consultas preparadas, filtros validados contra una lista de valores permitidos, y los errores internos solo se guardan en el log.
 - **Salida HTML:** Twig con el autoescape activado y sin ningún `|raw`, así que cualquier dato guardado se pinta como texto.
-- **Cabeceras:** `Content-Security-Policy: default-src 'self'`, `X-Content-Type-Options` y `X-Frame-Options`. No hay código ni estilos inline.
+- **Cabeceras:** `Content-Security-Policy: default-src 'self'`, `X-Content-Type-Options` y `X-Frame-Options`. No hay código ni estilos inline. Se quita `X-Powered-By` para no publicar la versión de PHP.
 - **Errores:** un único `ErrorHandler`: JSON en `/api` y una página de error en el resto.
 - **Validación:** el servidor valida todos los datos de entrada y no se fía del cliente. Solo se leen los campos conocidos y el estado inicial nunca lo decide el cliente.
 - **Historial:** crear una reserva o cambiar su estado y guardar el evento se hace en una sola transacción, así no queda historial huérfano.
@@ -88,7 +90,7 @@ Errores: 400 (JSON mal formado o filtro no válido), 404, 405, 409 (cambio de es
 - **CRUD completo:** la app crea, consulta y cancela reservas, pero no permite editar sus datos ni borrarlas. Se añadirían `PUT /api/reservas/{id}` (con la misma validación que al crear y un evento en el historial) y `DELETE /api/reservas/{id}`, con su formulario de edición.
 - **Confirmar desde la interfaz:** botón de confirmar en el listado y en el detalle. Hoy la interfaz solo cancela, que es lo que pide el enunciado.
 - **Reservas ya disfrutadas:** un estado `completada` (o marcarlas al pasar la fecha de salida).
-- **Orden del listado:** hoy el orden es fijo (por fecha de entrada, la más reciente primero). Se añadiría un parámetro de orden, camiando asi el orden segun (huésped, alojamiento, fechas, importe y estado, etc).
+- **Orden del listado:** hoy el orden es fijo (por fecha de entrada, la más reciente primero). Se añadiría un parámetro de orden (huésped, alojamiento, fechas, importe, estado, etc.), validado contra una lista de columnas permitidas.
 - **Docker:** un entorno reproducible (PHP, MariaDB y el servidor web) que se levante con un solo comando, sin depender de XAMPP.
 - **Migraciones versionadas:** en lugar de un único `.sql` que recrea todo, un fichero por cambio de esquema para poder evolucionar la base de datos sin perder datos.
 - **Alojamientos y disponibilidad:** una entidad `alojamiento` (con sus entidades `ciudad` y `pais`) a la que apunte la reserva, en lugar de un nombre en texto. Con ella se comprobaría la disponibilidad de fechas dentro de una transacción con bloqueo de filas, para que dos reservas simultáneas no se solapen.
@@ -96,9 +98,13 @@ Errores: 400 (JSON mal formado o filtro no válido), 404, 405, 409 (cambio de es
 - **Notificaciones:** un servicio que envíe emails al huésped al crear, confirmar o cancelar una reserva.
 - **Usuarios y roles:** autenticación con dos roles. El usuario normal solo vería y gestionaría sus propias reservas, y el administrador podría gestionarlas todas.
 - **Formato por idioma:** el formato de fechas e importes (`d/m/Y`, `1.234,50 €`) está fijo en las plantillas. Con más idiomas habría que formatearlos según el idioma activo.
-- **Pramework y librerias:** Si bien se sale de la regla de solo usar tegnologia nativa, usaria un framework y una libreria especializada en tablas como DevExtreme.
+- **Seguridad adicional:** hoy la API no tiene autenticación, así que cualquiera puede ver y cancelar reservas (ver usuarios y roles). También se comprobaría que el cuerpo llega como `application/json` (415 si no), se limitaría su tamaño y se limitarían las peticiones por IP.
+- **Framework y librerías:** la prueba pide solo tecnología nativa, pero en un proyecto real usaría un framework y una librería especializada en tablas, como DevExtreme.
 
 ## Escalabilidad
 
+1.000 reservas/hora son unas 0,3 por segundo: las escrituras no son el problema, lo serían las lecturas del listado.
+
 - **Nube con escalado automático:** desplegar en un proveedor como AWS o Azure, donde el servicio escala solo según la carga (más instancias cuando suben las reservas) y la base de datos gestionada hace copias de seguridad automáticas.
 - **Procesamiento asíncrono:** las tareas secundarias, como enviar los emails, saldrían de la petición y pasarían a una cola atendida por un proceso aparte. Así crear una reserva no espera a esas tareas y responde igual de rápido aunque aumente el volumen.
+- **Paginación:** el listado devuelve todas las reservas, y eso lo se notaría al crecer. limitaría el resultado con `LIMIT` y la tabla pediría páginas.
