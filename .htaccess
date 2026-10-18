@@ -1,0 +1,15 @@
+# Despliega todo el proyecto desde una carpeta y este fichero reparte las peticiones.
+RewriteEngine On
+
+# El código, la base de datos y el .env nunca se sirven al navegador.
+RewriteRule ^(backend|database)(/|$) - [F]
+
+# Lo que ya apunta a frontend/ se deja pasar.
+RewriteRule ^frontend/ - [L]
+
+# Si existe el fichero en frontend/ (css, js), se sirve tal cual.
+RewriteCond %{DOCUMENT_ROOT}/frontend%{REQUEST_URI} -f
+RewriteRule ^ frontend%{REQUEST_URI} [L]
+
+# Todo lo demás (páginas y API) lo atiende index.php.
+RewriteRule ^ frontend/index.php [L]
