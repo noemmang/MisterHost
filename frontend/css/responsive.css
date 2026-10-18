@@ -1,10 +1,48 @@
-/* Ajustes para pantallas pequeñas (móvil). */
-@media (max-width: 600px) {
+/* Filtros: a 673px o menos, en la tarjeta solo quedan el botón de filtros y el de nueva reserva. Los campos salen en un menú que flota sobre la tabla, para que esta no pierda altura y su barra de acciones siga a la vista (a 674px todavía caben en fila) */
+@media (max-width: 673px) {
+    .filtros {
+        position: relative;
+    }
+
+    .boton-filtros {
+        display: inline-block;
+    }
+
+    .filtros-campos {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: center;
+        gap: var(--espacio-m);
+        margin-top: var(--espacio-s);
+        padding: var(--espacio-m);
+        background: var(--color-superficie);
+        border: var(--borde);
+        border-radius: var(--radio);
+        box-shadow: var(--sombra);
+    }
+
+    .boton-filtros[aria-expanded="true"] + .filtros-campos {
+        display: flex;
+    }
+
     .filtros label {
         flex: 1 1 100%;
     }
+}
 
-    .datos,
+/* Ajustes para pantallas pequeñas (móvil). */
+@media (max-width: 600px) {
+    /* Los datos de la reserva mantienen el nombre y el valor en la misma fila, con menos separación para que quepan */
+    .datos {
+        column-gap: var(--espacio-m);
+    }
+
     .formulario {
         grid-template-columns: 1fr;
     }

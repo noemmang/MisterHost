@@ -3,6 +3,7 @@ import { ejecutar } from './aviso.js';
 
 // Elementos de la página. Los textos los entrega la plantilla en los atributos data- de [data-textos].
 const formulario = document.querySelector('[data-filtros]');
+const botonFiltros = document.querySelector('[data-filtros-boton]');
 const contenedorTabla = document.querySelector('[data-tabla]');
 const cuerpoTabla = contenedorTabla.querySelector('tbody');
 const plantillaFila = document.querySelector('[data-plantilla-fila]');
@@ -109,10 +110,20 @@ function cancelar() {
     }, textos.cancelacionOk);
 }
 
-// Filtrar sin recargar la página.
+// Abre o cierra el menú de filtros del móvil. El CSS lo muestra según el aria-expanded del botón.
+function mostrarFiltros(abiertos) {
+    botonFiltros.setAttribute('aria-expanded', abiertos);
+}
+
+// Filtrar sin recargar la página. Se cierra el menú de filtros para ver el resultado.
 formulario.addEventListener('submit', (evento) => {
     evento.preventDefault();
+    mostrarFiltros(false);
     ejecutar(cargarListado, '');
+});
+
+botonFiltros.addEventListener('click', () => {
+    mostrarFiltros(botonFiltros.getAttribute('aria-expanded') !== 'true');
 });
 
 // Las filas se crean al repintar, así que se escucha el cambio en el cuerpo de la tabla entero.

@@ -15,7 +15,7 @@
                 <dd>{{ reserva.id }}</dd>
 
                 <dt>{{ t('reserva.estado') }}</dt>
-                <dd><span class="estado estado-{{ reserva.estado }}">{{ t('reserva.estado.' ~ reserva.estado) }}</span></dd>
+                <dd><span class="estado estado-{{ reserva.estado }}" data-estado>{{ t('reserva.estado.' ~ reserva.estado) }}</span></dd>
 
                 <dt>{{ t('reserva.nombre_huesped') }}</dt>
                 <dd>{{ reserva.nombre_huesped }}</dd>
@@ -44,12 +44,18 @@
                 <dt>{{ t('reserva.fecha_creacion') }}</dt>
                 <dd>{{ reserva.fecha_creacion|date('d/m/Y H:i') }}</dd>
             </dl>
+
+            {# Una reserva ya cancelada no se puede cancelar de nuevo, así que el botón va oculto. #}
+            <button type="button" class="cancelar" data-accion="cancelar" data-id="{{ reserva.id }}"{% if reserva.estado == 'cancelada' %} hidden{% endif %}>{{ t('detalle.cancelar') }}</button>
+
+            {# Avisos de carga, éxito y error que pinta el JS. #}
+            <p class="aviso" role="status" data-aviso hidden></p>
         </section>
 
         <section>
             <h2>{{ t('detalle.historial') }}</h2>
 
-            <ol class="timeline">
+            <ol class="timeline" data-historial>
                 {% for evento in reserva.eventos %}
                     <li>
                         <time datetime="{{ evento.fecha_creacion }}">{{ evento.fecha_creacion|date('d/m/Y H:i') }}</time>
@@ -59,4 +65,16 @@
             </ol>
         </section>
     </div>
+
+    {# Textos que necesita el JS: nombre del estado cancelada y mensajes. #}
+    <div hidden data-textos
+        data-cancelada="{{ t('reserva.estado.cancelada') }}"
+        data-cargando="{{ t('mensaje.cargando') }}"
+        data-error-red="{{ t('mensaje.error_red') }}"
+        data-confirmar="{{ t('detalle.confirmar_cancelar') }}"
+        data-cancelacion-ok="{{ t('mensaje.cancelacion_ok') }}"></div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="module" src="/js/detalle.js"></script>
 {% endblock %}

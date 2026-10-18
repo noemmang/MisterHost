@@ -6,33 +6,39 @@
 {% block contenido %}
     {# El formulario usa GET, así que filtra también sin JavaScript. #}
     <form class="filtros" method="get" action="/" data-filtros>
-        <label>
-            {{ t('filtro.estado') }}
-            <select name="estado">
-                <option value="">{{ t('filtro.todos') }}</option>
-                {% for estado in estados %}
-                    <option value="{{ estado }}"{% if filtros.estado == estado %} selected{% endif %}>{{ t('reserva.estado.' ~ estado) }}</option>
-                {% endfor %}
-            </select>
-        </label>
-        <label>
-            {{ t('filtro.desde') }}
-            <input type="date" name="desde" value="{{ filtros.desde }}">
-        </label>
-        <label>
-            {{ t('filtro.hasta') }}
-            <input type="date" name="hasta" value="{{ filtros.hasta }}">
-        </label>
-        <label>
-            {{ t('filtro.huesped') }}
-            <input type="search" name="q" value="{{ filtros.q }}">
-        </label>
-        <label>
-            {{ t('filtro.alojamiento') }}
-            <input type="search" name="alojamiento" value="{{ filtros.alojamiento }}">
-        </label>
-        <button type="submit">{{ t('filtro.filtrar') }}</button>
-        <a class="boton-secundario" href="/">{{ t('filtro.limpiar') }}</a>
+        {# Solo se ve en el móvil: abre y cierra el menú con los campos. El JS cambia su aria-expanded y el CSS muestra el menú según ese valor. #}
+        <button type="button" class="boton-filtros boton-secundario" data-filtros-boton aria-expanded="false">{{ t('filtro.titulo') }}</button>
+
+        <div class="filtros-campos">
+            <label>
+                {{ t('filtro.estado') }}
+                <select name="estado">
+                    <option value="">{{ t('filtro.todos') }}</option>
+                    {% for estado in estados %}
+                        <option value="{{ estado }}"{% if filtros.estado == estado %} selected{% endif %}>{{ t('reserva.estado.' ~ estado) }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>
+                {{ t('filtro.desde') }}
+                <input type="date" name="desde" value="{{ filtros.desde }}">
+            </label>
+            <label>
+                {{ t('filtro.hasta') }}
+                <input type="date" name="hasta" value="{{ filtros.hasta }}">
+            </label>
+            <label>
+                {{ t('filtro.huesped') }}
+                <input type="search" name="q" value="{{ filtros.q }}">
+            </label>
+            <label>
+                {{ t('filtro.alojamiento') }}
+                <input type="search" name="alojamiento" value="{{ filtros.alojamiento }}">
+            </label>
+            <button type="submit">{{ t('filtro.filtrar') }}</button>
+            <a class="boton-secundario" href="/">{{ t('filtro.limpiar') }}</a>
+        </div>
+
         <a class="boton-nuevo" href="/reservas/nueva">{{ t('listado.nueva') }}</a>
     </form>
 

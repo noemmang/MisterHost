@@ -44,6 +44,7 @@ return [
     'listado.nueva' => 'Nueva reserva',
 
     // ---------- Filtros del listado ----------
+    'filtro.titulo' => 'Filtros',
     'filtro.estado' => 'Estado',
     'filtro.todos' => 'Todos',
     'filtro.desde' => 'Entrada desde',
@@ -61,6 +62,8 @@ return [
     'detalle.titulo' => 'Detalle',
     'detalle.resumen' => 'Resumen',
     'detalle.historial' => 'Historial',
+    'detalle.cancelar' => 'Cancelar reserva',
+    'detalle.confirmar_cancelar' => '¿Cancelar esta reserva?',
 
     // ---------- Datos de la reserva ----------
     'reserva.id' => 'Nº',

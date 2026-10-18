@@ -19,6 +19,7 @@
     --espacio-m: 1rem;
     --espacio-l: 2rem;
     --radio: 6px;
+    --sombra: 0 4px 12px rgba(0, 0, 0, 0.15);
     --borde: 1px solid var(--color-borde);
     --texto-pequeno: 0.85rem;
     --fuente: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -163,6 +164,25 @@ button:disabled {
     border-radius: var(--radio);
 }
 
+/* Los campos de los filtros van agrupados para poder esconderlos en el móvil. En pantallas grandes el grupo no cuenta y los campos se colocan como si estuvieran sueltos en .filtros */
+.filtros-campos {
+    display: contents;
+}
+
+/* Botón que abre el menú de filtros: solo se ve en el móvil (ver responsive.css) */
+.boton-filtros {
+    display: none;
+    background: var(--color-superficie);
+}
+
+.boton-filtros::after {
+    content: " ▾";
+}
+
+.boton-filtros[aria-expanded="true"]::after {
+    content: " ▴";
+}
+
 .filtros label,
 .formulario label {
     display: flex;
@@ -214,6 +234,7 @@ button:disabled {
     flex: 1;
     min-height: 0;
     overflow: auto;
+    isolation: isolate;
 }
 
 /* Bordes separados (en vez de colapsados) para que la fila de títulos fija conserve su borde al hacer scroll */
@@ -233,7 +254,24 @@ td {
 thead th {
     position: sticky;
     top: 0;
+    z-index: 2;
     background: var(--color-superficie);
+}
+
+/* La columna de las casillas queda fija a la izquierda al hacer scroll horizontal. Lleva fondo para tapar las celdas que pasan por debajo, y la casilla de los títulos va por encima de todo al coincidir los dos scrolls */
+th:first-child,
+td:first-child {
+    position: sticky;
+    left: 0;
+    background: var(--color-superficie);
+}
+
+td:first-child {
+    z-index: 1;
+}
+
+thead th:first-child {
+    z-index: 3;
 }
 
 tbody tr:last-child td {
@@ -263,10 +301,11 @@ tbody tr:hover td:not([data-celda-seleccion]) {
     white-space: nowrap;
 }
 
-/* Barra de acciones bajo la tabla, siempre visible */
+/* Barra de acciones bajo la tabla, siempre visible, con el botón centrado */
 .barra-acciones {
     padding: var(--espacio-s) var(--espacio-m);
     border-top: var(--borde);
+    text-align: center;
 }
 
 /* Botón de cancelar, con el color del estado cancelada */
@@ -320,6 +359,16 @@ tbody tr:hover td:not([data-celda-seleccion]) {
 .detalle h2 {
     margin: 0 0 var(--espacio-m);
     font-size: 1.1rem;
+}
+
+/* Botón de cancelar del detalle, centrado, y su aviso, justo debajo de los datos de la reserva */
+.detalle .cancelar {
+    display: block;
+    margin: var(--espacio-m) auto 0;
+}
+
+.detalle .aviso {
+    margin: var(--espacio-m) 0 0;
 }
 
 /* Página del formulario: la tarjeta va centrada y el aviso a su derecha, fuera de ella, para que al aparecer no mueva los campos */
