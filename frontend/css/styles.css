@@ -74,19 +74,9 @@ a {
 
 .marca {
     justify-self: start;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--espacio-s);
     color: var(--color-texto);
     font-weight: bold;
     text-decoration: none;
-}
-
-/* Logo a la derecha del nombre de la marca */
-.marca-logo {
-    width: 1.75rem;
-    height: 1.75rem;
-    border-radius: var(--radio);
 }
 
 /* Botón de volver con forma de enlace, a la derecha de la cabecera. Sin contorno, con fondo suave que se oscurece al pasar el ratón */
